@@ -1,5 +1,7 @@
 import express from "express"
 
+import { errorHandler } from './middleware/errorHandler';
+
 import usersRouter from "./routes/users"
 import tasksRouter from "./routes/tasks"
 import projectsRouter from "./routes/projects"
@@ -14,6 +16,8 @@ app.use("/users", usersRouter)
 app.use("/tasks", tasksRouter)
 app.use("/projects", projectsRouter)
 app.use("/auth", authRouter)
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log("server is listening on PORT");
