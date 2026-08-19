@@ -1,4 +1,5 @@
 import express from "express"
+import cors from 'cors';
 
 import { errorHandler } from './middleware/errorHandler';
 
@@ -9,6 +10,10 @@ import authRouter from "./routes/auth"
 
 const app = express()
 const PORT = process.env.PORT || 3000
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+}));
 
 app.use(express.json())
 

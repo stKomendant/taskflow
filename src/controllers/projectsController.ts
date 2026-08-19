@@ -1,28 +1,23 @@
-import {Request, Response} from "express"
-import {prisma} from "../lib/prisma"
+import { Response, Request } from "express";
+import { prisma } from "../lib/prisma";
+import { AuthRequest } from "../middleware/auth";
 
-export async function createProject(req: Request, res: Response) {
-    const {name, ownerId} = req.body
+export async function createProject(req: AuthRequest, res: Response) {
+  const { name } = req.body;
 
-if(!name || !ownerId){
-    return res.status(400).json({error: "Name and ownerId are required"})
-}
+  if (!name) {
+    return res.status(400).json({ error: "Name is required" });
+  }
 
-    const project = await prisma.project.create({
-        data: {
-            name,
-            ownerId
-        }
-    })
-    res.json(project)
+  const project = await prisma.project.create({
+    data: { name, ownerId: req.userId! },
+  });
+  res.json(project);
 }
 
 export async function getProjects(req: Request, res: Response) {
-    const projects = await prisma.project.findMany({
-        include: {
-            owner: true
-        }
-    })
-
-    res.json(projects)
+  const projects = await prisma.project.findMany({
+    include: { tasks: true },
+  });
+  res.json(projects);
 }
